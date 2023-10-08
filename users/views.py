@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.messages import constants
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 
 
 def register(request):
@@ -17,11 +18,16 @@ def register(request):
         confirm_password = request.POST.get('confirm_password')
 
         if not password == confirm_password:
-            messages.add_message(request, constants.ERROR, "Senhas não conferem.")
+            messages.add_message(
+                request, constants.ERROR, "Senhas não conferem."
+            )
             return redirect('/users/register')
         
         if len(password) < 6:
-            messages.add_message(request, constants.ERROR, "A senha deve possuir mais de 6 caracteres.")
+            messages.add_message(
+                request, constants.ERROR,
+                "Sua senha deve possuir mais de 6 caracteres."
+            )
             return redirect('/users/register')
         
         try:
@@ -32,10 +38,35 @@ def register(request):
                 email=email,
                 password=password
             )
-            messages.add_message(request, constants.SUCCESS, "Usuário cadastrado com sucesso")            
+            messages.add_message(
+                request, constants.SUCCESS, "Usuário cadastrado com sucesso"
+            )            
         except:
-            messages.add_message(request, constants.ERROR, "Erro externo do sistema, contate um administrador.")
+            messages.add_message(
+                request, constants.ERROR,
+                "Erro externo do sistema, contate um administrador."
+            )
             return redirect('/users/register')
         
         return redirect('/users/register')
+
+
+def auth_login(request):
+    if request.method == 'GET':
+        return render(request, "login.html")
+    
+    elif request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         
+        user = authenticate(username=username, password=password)
+        
+        if user:
+            login(request, user)
+            return redirect('/')
+        else:
+            messages.add_message(
+                request, constants.ERROR, "Username ou senha inválidos."
+            )
+            return redirect('/users/login')
+            
