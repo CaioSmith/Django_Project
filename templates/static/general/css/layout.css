@@ -4,14 +4,14 @@
   --light-color: #6de6ee;
   --contrast-color: #f4c96b;
   --differential-color: #066668;
-} 
+}
 
 * {
   font-family: "PSW 8.0 | Aula 1 6", sans-serif;
   color: white;
 }
 
-.font-destaque {
+.font-featured {
   color: var(--light-color);
   font-size: 40px;
 }
@@ -37,7 +37,7 @@
   border-radius: 10px;
 }
 
-.font-destaque-secundaria {
+.font-featured-second {
   color: var(--light-color);
   font-size: 35px;
 }
